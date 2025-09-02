@@ -10,6 +10,35 @@ class SentimentAnalyzer {
         }
     }
 
+    computeKeywordSignals(text) {
+        const t = (text || '').toLowerCase();
+        const counts = { joy: 0, sadness: 0, anger: 0, fear: 0, surprise: 0 };
+        const add = (k, n = 1) => counts[k] += n;
+
+        // Strong sadness phrases
+        if (t.includes('hopeless')) add('sadness', 3);
+        if (t.includes("can’t stop crying") || t.includes("can't stop crying") || t.includes('crying')) add('sadness', 3);
+        if (t.includes('nothing feels okay') || t.includes('nothing feels ok')) add('sadness', 2);
+        if (t.includes('overwhelmed')) add('sadness', 2);
+        // Anger
+        if (t.includes('furious') || t.includes('angry') || t.includes('pushed')) add('anger', 2);
+        // Fear/anxiety
+        if (t.includes('terrified') || t.includes('scared') || t.includes('anxious')) add('fear', 2);
+        // Joy
+        if (t.includes('happy') || t.includes('really good') || t.includes('grateful')) add('joy', 2);
+
+        const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+        const scores = {
+            joy: counts.joy / total,
+            sadness: counts.sadness / total,
+            anger: counts.anger / total,
+            fear: counts.fear / total,
+            surprise: counts.surprise / total,
+            neutral: 0
+        };
+        return scores;
+    }
+
     async analyzeSentiment(text) {
         if (!text || text.trim().length === 0) {
             return this.getDefaultEmotionResponse();
@@ -88,17 +117,33 @@ class SentimentAnalyzer {
                 }
             }
 
-            // Ensure values are normalized to sum to <= 1 and derive dominant emotion
-            const dominantEmotion = Object.entries(emotions)
+            // Ensure values are normalized to sum to <= 1
+            // (dominant emotion will be computed after blending)
+
+            // Blend with keyword signals to reduce misclassification (e.g., surprise spikes)
+            const kw = this.computeKeywordSignals(text);
+            const blend = (a, b, wA = 0.7) => (a * wA + b * (1 - wA));
+            const blended = {
+                anger: blend(emotions.anger || 0, kw.anger || 0),
+                disgust: emotions.disgust || 0,
+                fear: blend(emotions.fear || 0, kw.fear || 0),
+                joy: blend(emotions.joy || 0, kw.joy || 0),
+                neutral: emotions.neutral || 0,
+                sadness: blend(emotions.sadness || 0, kw.sadness || 0),
+                surprise: blend(emotions.surprise || 0, kw.surprise || 0) * 0.7 // downweight surprise overall
+            };
+
+            // Recompute dominant emotion and mood/advice using blended scores
+            const dominantEmotion = Object.entries(blended)
                 .reduce((acc, [k, v]) => (v > acc.val ? { key: k, val: v } : acc), { key: 'neutral', val: 0 }).key;
-            
+
             // Get mood category and advice
-            const { mood, advice } = this.analyzeEmotions(emotions);
+            const { mood, advice } = this.analyzeEmotions(blended);
             
             return {
                 label: mood,
-                score: emotions[dominantEmotion],
-                emotions,
+                score: blended[dominantEmotion],
+                emotions: blended,
                 advice,
                 raw: result[0]
             };

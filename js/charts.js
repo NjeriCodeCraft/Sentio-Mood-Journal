@@ -491,6 +491,63 @@ class ChartManager {
         }
     }
 
+    // Simple calendar heatmap using daily dominant emotion
+    renderMoodCalendar(entries) {
+        const container = document.getElementById('mood-calendar');
+        if (!container) return;
+
+        container.innerHTML = '';
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const startWeekday = firstDay.getDay(); // 0-6
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Index entries by date
+        const byDate = {};
+        entries.forEach(e => {
+            try {
+                const dateStr = new Date(e.created_at).toISOString().slice(0,10);
+                let moodData = e.mood_data;
+                if (typeof moodData === 'string') moodData = JSON.parse(moodData);
+                const emotions = moodData || {};
+                const dominant = Object.entries({
+                    joy: emotions.joy || 0,
+                    sadness: emotions.sadness || 0,
+                    anger: emotions.anger || 0,
+                    fear: emotions.fear || 0,
+                    surprise: emotions.surprise || 0
+                }).reduce((a, b) => (b[1] > a[1] ? b : a), ['neutral', 0])[0];
+                byDate[dateStr] = dominant;
+            } catch {}
+        });
+
+        // Fill leading blanks
+        for (let i = 0; i < startWeekday; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'day';
+            container.appendChild(empty);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const cell = document.createElement('div');
+            cell.className = 'day';
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+
+            const dateStr = new Date(year, month, d).toISOString().slice(0,10);
+            const mood = byDate[dateStr] || 'neutral';
+            if (mood === 'joy' || mood === 'happy') dot.style.background = '#4ade80';
+            else if (mood === 'sadness' || mood === 'sad') dot.style.background = '#60a5fa';
+            else if (mood === 'anger' || mood === 'angry') dot.style.background = '#f87171';
+            else dot.style.background = '#9ca3af';
+
+            cell.appendChild(dot);
+            container.appendChild(cell);
+        }
+    }
+
     processMoodData(rawData) {
         if (!rawData || rawData.length === 0) {
             return { labels: [], values: [] };

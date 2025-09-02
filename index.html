@@ -194,6 +194,7 @@
                     </div>
 
                     <div class="journal-entry">
+                        <div class="daily-prompt" id="daily-prompt" aria-live="polite"></div>
                         <textarea 
                             id="journal-text" 
                             placeholder="Start writing about your day, your feelings, or anything on your mind..."
@@ -255,6 +256,21 @@
                             <h4>💡 AI Advice</h4>
                             <p id="ai-advice-text">Write something to get personalized advice!</p>
                         </div>
+
+                        <!-- Safety Help Banner -->
+                        <div id="safety-banner" class="safety-banner hidden" role="alert">
+                            <div class="safety-content">
+                                <div class="safety-icon">🫶</div>
+                                <div class="safety-text">
+                                    <strong>Need to talk to someone?</strong>
+                                    <p>If you’re feeling overwhelmed, you’re not alone. Here are resources that can help right now.</p>
+                                </div>
+                                <div class="safety-actions">
+                                    <a class="btn btn-primary" href="tel:1199">Kenya: 1199 (24/7 Hotline)</a>
+                                    <a class="btn btn-secondary" href="https://www.befrienders.org/" target="_blank" rel="noopener">Global helplines</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -274,6 +290,17 @@
                         <div class="insight-card chart-card">
                             <h3>Mood Distribution</h3>
                             <canvas id="mood-pie-chart"></canvas>
+                        </div>
+
+                        <div class="insight-card calendar-card">
+                            <h3>Mood Calendar</h3>
+                            <div id="mood-calendar" class="mood-calendar" aria-label="Mood calendar heatmap"></div>
+                            <div class="calendar-legend">
+                                <span><span class="dot happy"></span> Happy</span>
+                                <span><span class="dot sad"></span> Sad</span>
+                                <span><span class="dot angry"></span> Angry</span>
+                                <span><span class="dot neutral"></span> Neutral</span>
+                            </div>
                         </div>
 
                         <div class="insight-card entries-card">

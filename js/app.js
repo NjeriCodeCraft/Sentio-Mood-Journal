@@ -108,6 +108,9 @@ class SentioApp {
             this.saveJournalEntry();
         });
 
+        // Daily prompt on load
+        this.setDailyPrompt();
+
         // Theme toggle events
         document.getElementById('light-theme')?.addEventListener('click', () => {
             this.setTheme('light');
@@ -373,6 +376,16 @@ class SentioApp {
             if (adviceElement) {
                 adviceElement.textContent = analysis.advice || "I'm here to listen. How are you feeling today?";
             }
+
+            // Show or hide safety banner based on high negative emotions
+            const safety = document.getElementById('safety-banner');
+            if (safety) {
+                const highSad = (emotions.sadness || 0) >= 0.7;
+                const highAnger = (emotions.anger || 0) >= 0.7;
+                const highFear = (emotions.fear || 0) >= 0.7;
+                if (highSad || highAnger || highFear) safety.classList.remove('hidden');
+                else safety.classList.add('hidden');
+            }
             
             // Show the mood analysis section
             if (moodAnalysis) {
@@ -535,6 +548,9 @@ class SentioApp {
             // Update the mood pie chart with processed entries
             this.chartManager.updateMoodPieChart(processedEntries);
             
+            // Render the mood calendar with processed entries
+            this.chartManager.renderMoodCalendar(processedEntries);
+
             // Display recent entries
             this.displayRecentEntries(processedEntries);
             
@@ -1076,6 +1092,24 @@ class SentioApp {
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
+    }
+
+    setDailyPrompt() {
+        const prompts = [
+            "What’s one thing you’re grateful for today?",
+            "What drained your energy the most today?",
+            "Who made you smile recently, and why?",
+            "What’s something small you did well today?",
+            "If your mood had a color today, what would it be and why?",
+            "What’s one thing you want to let go of?",
+            "What would support look like for you right now?"
+        ];
+        const promptEl = document.getElementById('daily-prompt');
+        if (!promptEl) return;
+        const seed = new Date().toISOString().slice(0, 10);
+        let hash = 0; for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+        const prompt = prompts[hash % prompts.length];
+        promptEl.textContent = `📝 ${prompt}`;
     }
 }
 
