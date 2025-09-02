@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌸 Sentio - Understand your emotions. One entry at a time.</title>
+    <link rel="icon" type="image/png" href="Logo/Sentio logo 2.png" style="border-radius: 50%;">
+    <link rel="apple-touch-icon" href="Logo/Sentio logo 2.png">
+    <style>
+        link[rel="icon"] {
+            border-radius: 50%;
+        }
+    </style>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Screen -->
+        <div id="loading" class="loading-screen">
+            <div class="loading-content">
+                <div class="logo-icon">🌸</div>
+                <h2>Sentio</h2>
+                <p>Loading your mood journal...</p>
+            </div>
+        </div>
+
+        <!-- Landing Page -->
+        <div id="landing-screen" class="screen">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="logo-section">
+                        <h1 class="logo">🌸 Sentio</h1>
+                        <p class="tagline">Understand your emotions. One entry at a time.</p>
+                        <p class="explainer">Track your mood with AI-powered journaling and get personalized insights.</p>
+                    </div>
+                    
+                    <div class="meditation-illustration">
+                        🧘‍♀️
+                    </div>
+                    
+                    <div class="cta-buttons">
+                        <button id="show-signup" class="btn btn-primary">Sign Up</button>
+                        <button id="show-login" class="btn btn-secondary">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authentication Screen -->
+        <div id="auth-screen" class="screen hidden">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h1><span class="logo-icon">🌸</span> Sentio</h1>
+                    <button id="back-to-landing" class="btn btn-ghost">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+
+                <div class="auth-forms">
+                    <!-- Login Form -->
+                    <form id="login-form" class="auth-form">
+                        <h2>Welcome Back</h2>
+                        <p class="friendly-text">Hello, Chommie 👋 Glad to have you back. Let's check in with your mood today.</p>
+                        <div class="form-group">
+                            <input type="email" id="login-email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="login-password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                        <p class="form-switch">
+                            Don't have an account? 
+                            <a href="#" id="show-register">Create one</a>
+                        </p>
+                    </form>
+
+                    <!-- Register Form -->
+                    <form id="register-form" class="auth-form hidden">
+                        <h2>Create Account</h2>
+                        <div class="form-group">
+                            <input type="text" id="register-name" placeholder="Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="register-nickname" placeholder="Nickname (e.g., Chommie)" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="register-email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="register-password" placeholder="Password" required>
+                        </div>
+                        <div class="form-group terms-group">
+                            <label class="terms-checkbox">
+                                <input type="checkbox" id="terms-checkbox" required>
+                                <span class="checkmark"></span>
+                                I agree to the <a href="#" id="show-terms">Terms & Conditions</a>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Account</button>
+                        <p class="form-switch">
+                            Already have an account? 
+                            <a href="#" id="show-login-form">Sign in</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App Screen -->
+        <div id="main-screen" class="screen hidden">
+            <!-- Navigation -->
+            <nav class="app-nav">
+                <div class="nav-brand">
+                    <span class="logo-icon">🌸</span>
+                    <span class="brand-text">Sentio</span>
+                </div>
+                <div class="nav-links">
+                    <button class="nav-link active" data-tab="home">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </button>
+                    <button class="nav-link" data-tab="journal">
+                        <i class="fas fa-book"></i>
+                        <span>Mood Journal</span>
+                    </button>
+                    <button class="nav-link" data-tab="insights">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Insights</span>
+                    </button>
+                    <button class="nav-link" data-tab="profile">
+                        <i class="fas fa-user"></i>
+                        <span>Profile</span>
+                    </button>
+                </div>
+                <button id="logout-btn" class="btn btn-ghost">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </nav>
+
+            <!-- Tab Content -->
+            <main class="tab-content">
+                <!-- Home/Dashboard Tab -->
+                <div id="home-tab" class="tab-pane active">
+                    <div class="dashboard-header">
+                        <h1 id="personalized-greeting">Hi Chommie, welcome back ✨</h1>
+                    </div>
+                    
+                    <div class="mood-prompt-card">
+                        <div class="mood-prompt-content">
+                            <div class="mood-emoji" id="mood-prompt-emoji">😊</div>
+                            <div class="mood-prompt-text">
+                                <h3 id="mood-prompt-title">Want to capture this moment?</h3>
+                                <p id="mood-prompt-description">Share what's making you feel good today</p>
+                            </div>
+                        </div>
+                        <button id="start-journaling" class="btn btn-primary">
+                            <i class="fas fa-pen"></i>
+                            Start Journaling
+                        </button>
+                    </div>
+                    
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">📝</div>
+                            <div class="stat-info">
+                                <span class="stat-number" id="total-entries">0</span>
+                                <span class="stat-label">Total Entries</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-info">
+                                <span class="stat-number" id="current-streak">0</span>
+                                <span class="stat-label">Day Streak</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-info">
+                                <span class="stat-number" id="avg-mood-score">--</span>
+                                <span class="stat-label">Avg Mood</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mood Journal Tab -->
+                <div id="journal-tab" class="tab-pane">
+                    <div class="journal-header">
+                        <h2>How are you feeling today?</h2>
+                        <p>Write about your thoughts and emotions. Our AI will analyze your mood and provide insights.</p>
+                    </div>
+
+                    <div class="journal-entry">
+                        <textarea 
+                            id="journal-text" 
+                            placeholder="Start writing about your day, your feelings, or anything on your mind..."
+                            rows="10"
+                        ></textarea>
+                        
+                        <div class="entry-actions">
+                            <button id="analyze-mood" class="btn btn-secondary">
+                                <i class="fas fa-brain"></i>
+                                Analyze Mood
+                            </button>
+                            <button id="save-entry" class="btn btn-primary" disabled>
+                                <i class="fas fa-save"></i>
+                                Save Entry
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="mood-analysis" class="mood-analysis hidden">
+                        <h3>Mood Analysis Results</h3>
+                        <div class="mood-scores">
+                            <div class="mood-score">
+                                <span class="mood-label">Happy</span>
+                                <div class="mood-bar">
+                                    <div class="mood-fill happy" id="happy-score"></div>
+                                </div>
+                                <span class="mood-percentage" id="happy-percentage">0%</span>
+                            </div>
+                            <div class="mood-score">
+                                <span class="mood-label">Sad</span>
+                                <div class="mood-bar">
+                                    <div class="mood-fill sad" id="sad-score"></div>
+                                </div>
+                                <span class="mood-percentage" id="sad-percentage">0%</span>
+                            </div>
+                            <div class="mood-score">
+                                <span class="mood-label">Angry</span>
+                                <div class="mood-bar">
+                                    <div class="mood-fill angry" id="angry-score"></div>
+                                </div>
+                                <span class="mood-percentage" id="angry-percentage">0%</span>
+                            </div>
+                            <div class="mood-score">
+                                <span class="mood-label">Fear</span>
+                                <div class="mood-bar">
+                                    <div class="mood-fill fear" id="fear-score"></div>
+                                </div>
+                                <span class="mood-percentage" id="fear-percentage">0%</span>
+                            </div>
+                            <div class="mood-score">
+                                <span class="mood-label">Surprise</span>
+                                <div class="mood-bar">
+                                    <div class="mood-fill surprise" id="surprise-score"></div>
+                                </div>
+                                <span class="mood-percentage" id="surprise-percentage">0%</span>
+                            </div>
+                        </div>
+                        <div class="ai-advice">
+                            <h4>💡 AI Advice</h4>
+                            <p id="ai-advice-text">Write something to get personalized advice!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights Tab -->
+                <div id="insights-tab" class="tab-pane">
+                    <div class="insights-header">
+                        <h2>Your Mood Journey</h2>
+                        <p>Track your emotional patterns over time</p>
+                    </div>
+
+                    <div class="insights-grid">
+                        <div class="insight-card chart-card">
+                            <h3>Weekly Mood Trend</h3>
+                            <canvas id="mood-trend-chart"></canvas>
+                        </div>
+
+                        <div class="insight-card chart-card">
+                            <h3>Mood Distribution</h3>
+                            <canvas id="mood-pie-chart"></canvas>
+                        </div>
+
+                        <div class="insight-card entries-card">
+                            <h3>Recent Entries</h3>
+                            <div id="recent-entries" class="entries-list">
+                                <p class="empty-state">No entries yet. Start journaling to see your history!</p>
+                            </div>
+                            <button id="export-csv" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                Export as CSV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profile-tab" class="tab-pane">
+                    <div class="profile-header">
+                        <h2>Profile Settings</h2>
+                    </div>
+
+                    <div class="profile-content">
+                        <div class="profile-info">
+                            <h3>Personal Information</h3>
+                            
+                            <!-- View Mode -->
+                            <div id="profile-view-mode">
+                                <div class="info-group">
+                                    <label>Full Name</label>
+                                    <span id="profile-name">--</span>
+                                </div>
+                                <div class="info-group">
+                                    <label>Nickname</label>
+                                    <span id="profile-nickname">--</span>
+                                </div>
+                                <div class="info-group">
+                                    <label>Email</label>
+                                    <span id="profile-email">--</span>
+                                </div>
+                                <button id="edit-profile" class="btn btn-secondary">
+                                    <i class="fas fa-edit"></i>
+                                    Edit Info
+                                </button>
+                            </div>
+
+                            <!-- Edit Mode -->
+                            <div id="profile-edit-mode" class="hidden">
+                                <div class="info-group">
+                                    <label for="edit-name">Full Name</label>
+                                    <input type="text" id="edit-name" class="form-input" placeholder="Enter your full name">
+                                </div>
+                                <div class="info-group">
+                                    <label for="edit-nickname">Nickname</label>
+                                    <input type="text" id="edit-nickname" class="form-input" placeholder="Enter your nickname">
+                                </div>
+                                <div class="info-group">
+                                    <label>Email</label>
+                                    <span id="profile-email-readonly">--</span>
+                                    <small class="text-muted">Email cannot be changed</small>
+                                </div>
+                                <div class="edit-buttons">
+                                    <button id="save-profile" class="btn btn-primary">
+                                        <i class="fas fa-save"></i>
+                                        Save Changes
+                                    </button>
+                                    <button id="cancel-edit" class="btn btn-secondary">
+                                        <i class="fas fa-times"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="theme-settings">
+                            <h3>Appearance</h3>
+                            <div class="theme-toggle">
+                                <label>Theme</label>
+                                <div class="toggle-buttons">
+                                    <button id="light-theme" class="theme-btn active">
+                                        🌞 Light
+                                    </button>
+                                    <button id="dark-theme" class="theme-btn">
+                                        🌙 Dark
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Error Toast -->
+        <div id="error-toast" class="toast error hidden">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="error-message"></span>
+        </div>
+
+        <!-- Success Toast -->
+        <div id="success-toast" class="toast success hidden">
+            <i class="fas fa-check-circle"></i>
+            <span id="success-message"></span>
+        </div>
+
+        <!-- Terms and Conditions Modal -->
+        <div id="terms-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>📜 Sentio Terms & Privacy</h2>
+                    <button id="close-terms" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>By signing up, you agree to the following:</p>
+                    <div class="terms-section">
+                        <h3>🔒 Privacy First</h3>
+                        <p>Your journal entries are private and only visible to you. We will never share, sell, or expose your data.</p>
+                    </div>
+                    <div class="terms-section">
+                        <h3>🛡️ Security</h3>
+                        <p>Protect your login credentials. If someone else uses your account, we can't take responsibility for their actions.</p>
+                    </div>
+                    <div class="terms-section">
+                        <h3>🤖 AI Insights</h3>
+                        <p>Mood analysis and advice are generated by AI and should not replace professional mental health support.</p>
+                    </div>
+                    <div class="terms-section">
+                        <h3>✨ Good Vibes Only</h3>
+                        <p>Use Sentio respectfully and for your personal growth.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="accept-terms" class="btn btn-primary">I Accept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Runtime Configuration (loaded from env.js if present) -->
+    <script>
+        window._env_ = window._env_ || {};
+    </script>
+    <script src="js/env.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/env-loader.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/sentiment.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
