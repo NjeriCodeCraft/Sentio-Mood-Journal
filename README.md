@@ -26,17 +26,32 @@ Sentio is an AI-powered mood journaling app that helps users track, analyze, and
 - Terms & Conditions with privacy policy
 - Session management and logout
 
+### 🧠 **AI Mood Understanding (Updated)**
+- Emotion detection across joy, sadness, anger, fear, surprise, neutral
+- Robust parsing of Hugging Face responses with keyword blending to reduce misclassification
+- Empathetic, context-aware advice (e.g., for mixed Sad & Angry, strong Sad, strong Fear)
+- Safety banner surfaces helplines automatically when high negative emotions are detected (Kenya 1199 + global link)
+
 ### 📝 **Mood Journaling**
 - Freeform text journaling interface
 - AI-powered sentiment analysis (Happy/Sad/Angry percentages)
 - Personalized AI advice based on mood analysis
 - Save entries with mood data
 
+### 📅 **Mood Calendar (New)**
+- Calendar heatmap card in Insights
+- Daily colored dot by dominant emotion (green=happy, blue=sad, red=angry, gray=neutral)
+- Auto-updates from saved entries
+
 ### 🏠 **Personalized Dashboard**
 - Rotating mood prompts with 6 different scenarios
 - Quick stats: Total entries, day streak, average mood
 - Personalized greeting with user nickname
 - One-click navigation to journaling
+
+### ✏️ **Daily Prompt (New)**
+- A gentle, rotating writing prompt each day above the journal area
+- Deterministic by date; feels warm and personal without backend calls
 
 ### 📊 **Insights & Analytics**
 - Weekly mood trend charts
@@ -107,6 +122,10 @@ Sentio is an AI-powered mood journaling app that helps users track, analyze, and
    - Open `http://localhost:8080` in your browser
    - Sign up for a new account
    - Start journaling and tracking your mood!
+
+6. **Notes on Security**
+   - `env.js` is ignored by Git. Never commit real keys.
+   - If a secret was ever pushed, rotate it in the provider dashboard.
 
 ## 📱 Usage
 
